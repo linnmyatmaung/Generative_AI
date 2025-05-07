@@ -27,6 +27,17 @@ ENV = local
 PORT=3000
 
 Folder Structure
+/Generative_AI
+│
+├── Dockerfile       # Docker configuration for deployment
+├──          # Entry point (must be in root for deployment)
+└── src
+    ├── config       # Configuration utilities
+    ├── constant
+    │   └── data.js  # Static data/constants
+    ├── controllers  # Request handlers
+    ├── routes       # Express route definitions
+    └── service      # Groq AI service functions
 Features
 🤖 Handles chat prompts and returns responses using Groq AI.
 🔐 Environment-secured API credentials.
