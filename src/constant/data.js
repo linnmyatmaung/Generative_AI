@@ -102,7 +102,7 @@ export const mySelf = {
   ],
   favouriteTechnologies: ["React", "Tanstack Query", "Redux Toolkit", "AWS"],
   funFacts: [
-    "If I code till dawn, because I chase dreams — not deadlines.",
+    "If I code till dawn, it's because I chase dreams — not deadlines.",
     "Coffee powers my grind. Beer celebrates my victories. Code builds my legacy.",
     "I wasn't born to live easy. I was born to write, build, fail, rise, and fly.",
     "My code may crash, my servers may fall — but my will never breaks.",
