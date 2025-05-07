@@ -1,60 +1,38 @@
-<!-- 🔧 -->
+# Groq AI Chat Bot API (Backend)
 
-# Azure OpenAI Chat Bot API (Backend)
-
-This is the backend API for the Mindy Wunna chat bot. It uses Azure OpenAI services to process user input and return AI-generated responses. The API is built with Express.js, uses serverless-http for deployment on AWS Lambda, and integrates securely with the Azure OpenAI SDK.
-
-<!-- 🚀 -->
-![](https://web-api.textin.com/ocr_image/external/5babc9c0889300d2.jpg)
+This is the backend API for my porforlio chat bot. The idea was conceptualized by Wunna Aung and implemented by Linn Myat Maung. Unlike the original implementation using Azure OpenAI, this project leverages **Groq AI** to process user input and return AI-generated responses. The API is built with Express.js and deployed on **Render** using a Dockerfile.
 
 # Tech Stack
 
-Azure OpenAI SDK – Access GPT models hosted on Azure.
+- **Groq AI SDK** – Access GPT models hosted on Groq AI.
+- **Express.js** – Web framework for defining API routes.
+- **Docker** – Containerization for deployment.
+- **Render** – Cloud platform for hosting the application.
 
-Express.js – Web framework for defining API routes.
+# Setup Instructions
 
-Serverless HTTP – Enables running Express apps on AWS Lambda.
-
-<!-- 📝 -->
-![](https://web-api.textin.com/ocr_image/external/be2749bf6bf60acf.jpg)
-
-#  Setup Instructions
-
-# 1. Register for Azure OpenAI API
+## 1. Register for Groq AI API
 
 Sign up for access and get your API key and endpoint:
 
- https://ai.azure.com/?tid=3b2b947c-fc02-41b0-9230-9b5a3d92e761
+[https://groq.ai/signup](https://groq.ai/signup)
 
-<!-- 🔗 -->
-![](https://web-api.textin.com/ocr_image/external/0c42cc3771c42c42.jpg)
+## 2. Add Environment Variables
 
-# 2. Add Environment Variables
+Create a `.env` file in the root of the backend folder and add:
 
-Create a .env file in the root of the backend folder and add:
+```plaintext
+GROQ_API_KEY=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
+ENV = local
+PORT=3000
 
-<!-- .env  -->
-![](https://web-api.textin.com/ocr_image/external/4e099781b10d3de7.jpg)
-
-AZURE_OPENAI_ENDPOINT=&lt;Your Azure OpenAI Endpoint&gt;
-
-AZURE_OPENAI_API_KEY=&lt;Your Azure API Key&gt;
-
-OPENAI_API_VERSION=&lt;Your API Version&gt;  # e.g., 2023-03-15-previe
-
-w
-
-AZURE_OPENAI_DEPLOYMENT_NAME=&lt;Your Model Name&gt;
-
-<!-- 📁 -->
-![](https://web-api.textin.com/ocr_image/external/d891218337f705f3.jpg)
-
-## Folder Structure
-
-<!-- Untitled 1 -->
-
-<!-- /backend │ ├── index.js # Entry point (must be in root for Lambda deployment) │ └── src  ├── config # Configuration utilities  ├── constant  │ └── data.js # Static data/constants  ├── controllers # Request handlers  ├── routes # Express route definitions  └── service # Azure/OpenAI service functions 💡 Features 🤖 Handles chat prompts and returns responses using Azure OpenAI. 🔐 Environment-secured API credentials. ⚡ Optimized for serverless deployment (AWS Lambda ready). 📦 Deployment Notes Ensure index.js remains in the root directory for AWS Lambda compatibility. -->
-![](https://web-api.textin.com/ocr_image/external/20b7909f054fd45f.jpg)
-
-<!-- Untitled 2 -->
-
+Folder Structure
+Features
+🤖 Handles chat prompts and returns responses using Groq AI.
+🔐 Environment-secured API credentials.
+⚡ Optimized for containerized deployment on Render.
+📦 Deployment-ready with Docker.
+Deployment Notes
+Ensure index.js remains in the root directory for compatibility with Docker and Render.
+Verify that your .env file contains the correct credentials before deployment.
+```
