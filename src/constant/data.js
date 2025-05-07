@@ -46,11 +46,10 @@ export const mySelf = {
     universities: {
       2019_2025: {
         name: "University Of Technology( Yatanarpon Cyber City) (UTYCC)",
-        specialization: "Information Science Technology",
-        remark: "Because of COVID-19, I couldn't continue my study.",
+        specialization: "Information Science Technology(IST)",
       },
       2020_2025: {
-        name: "University Of People",
+        name: "University Of People(UoPeople",
         specialization: "Computer Science",
         course_works: [
           "Programming",
