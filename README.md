@@ -1,58 +1,43 @@
-# Groq AI Chat Bot API (Backend)
+# OpenRouter Chat API
 
-[https://linnmyatmaung-chatbot.onrender.com/chat](https://linnmyatmaung-chatbot.onrender.com/chat)
+Minimal Express API that forwards a message to OpenRouter and returns its reply.
 
-This is the backend API for my portfolio chat bot. The idea was conceptualized by **Wunna Aung** and implemented by **Linn Myat Maung**. Unlike the original implementation using Azure OpenAI, this project leverages **Groq AI** to process user input and return AI-generated responses. The API is built with **Express.js** and deployed on **Render** using a Dockerfile.
+## Run locally
 
-# Tech Stack
+Requires Node.js 20 or newer.
 
-- **[Groq AI SDK](https://groq.ai/)** – Access GPT models hosted on Groq AI.
-- **[Express.js](https://expressjs.com/)** – Web framework for defining API routes.
-- **[Docker](https://www.docker.com/)** – Containerization for deployment.
-- **[Render](https://render.com/)** – Cloud platform for hosting the application.
-
-# Setup Instructions
-
-## 1. Register for Groq AI API
-
-Sign up for access and get your API key and endpoint:
-
-[https://groq.ai/signup](https://groq.ai/signup)
-
-## 2. Add Environment Variables
-
-Create a `.env` file in the root of the backend folder and add:
-
-```plaintext
-GROQ_API_KEY=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
-ENV = local
-PORT=3000
+```sh
+npm ci
+npm start
 ```
 
-# Folder Structure
+Copy `.env.example` to `.env` and add your OpenRouter key:
 
-```
-/Generative_AI
-│
-├── Dockerfile       # Docker configuration for deployment
-├── index.js         # Entry point (must be in root for deployment)
-└── src
-    ├── config       # Configuration utilities
-    ├── constant
-    │   └── data.js  # Static data/constants
-    ├── controllers  # Request handlers
-    ├── routes       # Express route definitions
-    └── service      # Groq AI service functions
+```sh
+copy .env.example .env
 ```
 
-# Features
+The server listens on `PORT` (default `8000`). Send a request to `POST /chat`:
 
-- 🤖 Handles chat prompts and returns responses using **Groq AI**.
-- 🔐 Environment-secured API credentials.
-- ⚡ Optimized for containerized deployment on **Render**.
-- 📦 Deployment-ready with **Docker**.
+```json
+{ "message": "Hello!" }
+```
 
-# Deployment Notes
+The response contains the model reply:
 
-- Ensure `index.js` remains in the root directory for compatibility with Docker and Render.
-- Verify that your `.env` file contains the correct credentials before deployment.
+```json
+{ "reply": "Hello! How can I help?" }
+```
+
+`GET /health` returns the service status.
+
+## Deploy to Render
+
+1. Push this repository to GitHub.
+2. In Render, choose **New +** → **Blueprint** and select the repository.
+3. Set `OPENROUTER_API_KEY` in the service's environment settings. The model is
+   set by `render.yaml` and can be changed there or in the Render dashboard.
+4. Deploy. Render uses the included `render.yaml` to install dependencies,
+   start the Node service, and check `GET /health`.
+
+Never commit API keys. `.env` is ignored by Git.
