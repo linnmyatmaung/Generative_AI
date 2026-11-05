@@ -3,7 +3,8 @@ import cors from "cors";
 import "dotenv/config";
 import { rateLimit } from "express-rate-limit";
 import { mySelf } from "./src/constant/data.js";
-import { formatReply } from "./src/service/formatReply.js";
+import { createReplyFormatter } from "./src/service/formatReply.js";
+import { readOpenRouterStream } from "./src/service/readOpenRouterStream.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -58,23 +59,45 @@ app.post("/chat", chatLimiter, async (req, res) => {
           "nvidia/nemotron-3-ultra-550b-a55b:free",
         messages,
         max_tokens: 400,
+        stream: true,
       }),
     });
-    const result = await response.json();
 
     if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
       console.error("OpenRouter request failed:", result.error ?? response.status);
       return res.status(502).json({ error: "OpenRouter request failed" });
     }
 
-    const reply = result.choices?.[0]?.message?.content;
-    if (typeof reply !== "string") {
+    if (!response.body) {
       return res.status(502).json({ error: "OpenRouter returned no reply" });
     }
 
-    return res.json({ reply: formatReply(reply) });
+    const formatter = createReplyFormatter();
+    res.status(200).set({
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+      "X-Accel-Buffering": "no",
+    });
+    let receivedDelta = false;
+
+    for await (const chunk of readOpenRouterStream(response.body)) {
+      receivedDelta = true;
+      if (!res.headersSent) res.flushHeaders();
+      const formatted = formatter.push(chunk);
+      if (formatted) res.write(formatted);
+    }
+
+    if (!receivedDelta) {
+      return res.status(502).json({ error: "OpenRouter returned no reply" });
+    }
+
+    const remaining = formatter.finish();
+    if (remaining) res.write(remaining);
+    return res.end();
   } catch (error) {
     console.error("OpenRouter request failed:", error);
+    if (res.headersSent) return res.destroy(error);
     return res.status(502).json({ error: "OpenRouter request failed" });
   }
 });

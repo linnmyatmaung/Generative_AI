@@ -13,7 +13,7 @@ test("GET /health reports the service is running", async () => {
   assert.deepEqual(await response.json(), { status: "ok" });
 });
 
-test("POST /chat returns a non-empty reply", async () => {
+test("POST /chat streams a non-empty plain-text reply", async () => {
   const response = await fetch(new URL("/chat", baseUrl), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -22,7 +22,8 @@ test("POST /chat returns a non-empty reply", async () => {
   });
 
   assert.equal(response.status, 200);
-  const result = await response.json();
-  assert.equal(typeof result.reply, "string");
-  assert.ok(result.reply.trim().length > 0);
+  assert.match(response.headers.get("content-type"), /^text\/plain; charset=utf-8$/);
+  const reply = await response.text();
+  assert.ok(reply.trim().length > 0);
+  assert.equal(reply.startsWith("{"), false);
 });

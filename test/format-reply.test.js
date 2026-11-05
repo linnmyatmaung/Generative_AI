@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatReply } from "../src/service/formatReply.js";
+import { createReplyFormatter, formatReply } from "../src/service/formatReply.js";
 
 test("removes bold markers and replaces dash punctuation", () => {
   assert.equal(
@@ -14,4 +14,12 @@ test("preserves ordinary hyphenated words", () => {
     formatReply("I build full-stack applications and work hard."),
     "I build full-stack applications and work hard.",
   );
+});
+
+test("formats streamed chunks consistently across split punctuation", () => {
+  const formatter = createReplyFormatter();
+  const chunks = ["I am **Linn** ", "— a developer ", "- and a full-", "stack engineer."];
+  const streamed = chunks.map((chunk) => formatter.push(chunk)).join("") + formatter.finish();
+
+  assert.equal(streamed, formatReply(chunks.join("")));
 });
