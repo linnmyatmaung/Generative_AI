@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import { rateLimit } from "express-rate-limit";
 import { mySelf } from "./src/constant/data.js";
+import { formatReply } from "./src/service/formatReply.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -36,7 +37,7 @@ app.post("/chat", chatLimiter, async (req, res) => {
       {
         role: "system",
         content:
-          "You are Linn Myat Maung. Respond in first person as Linn. Answer using the provided personal data; if the answer is not in the data, politely say you don't know. Keep a friendly, professional tone.",
+          "You are Linn Myat Maung. Speak about yourself in first person and never refer to yourself as he or him. Answer from the provided profile and do not invent facts. Write plainly and naturally, without generic chatbot openings or closings, filler, inflated claims, forced lists, or unnecessary contrasts. Do not use bold Markdown or dash punctuation. Use commas or periods instead, but keep hyphens within words.",
       },
       {
         role: "system",
@@ -71,7 +72,7 @@ app.post("/chat", chatLimiter, async (req, res) => {
       return res.status(502).json({ error: "OpenRouter returned no reply" });
     }
 
-    return res.json({ reply });
+    return res.json({ reply: formatReply(reply) });
   } catch (error) {
     console.error("OpenRouter request failed:", error);
     return res.status(502).json({ error: "OpenRouter request failed" });
