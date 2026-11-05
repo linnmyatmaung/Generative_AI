@@ -1,17 +1,30 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import { rateLimit } from "express-rate-limit";
 import { mySelf } from "./src/constant/data.js";
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 app.get("/health", (_req, res) => res.status(200).json({ status: "ok" }));
 
-app.post("/chat", async (req, res) => {
+const chatLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many requests. Please try again in a minute." },
+});
+
+app.post("/chat", chatLimiter, async (req, res) => {
   const { message } = req.body ?? {};
   if (typeof message !== "string" || !message.trim()) {
     return res.status(400).json({ error: "Message is required" });
+  }
+  if (message.length > 2000) {
+    return res.status(400).json({ error: "Message must be 2000 characters or fewer" });
   }
 
   if (!process.env.OPENROUTER_API_KEY) {
@@ -43,6 +56,7 @@ app.post("/chat", async (req, res) => {
           process.env.OPENROUTER_MODEL ||
           "nvidia/nemotron-3-ultra-550b-a55b:free",
         messages,
+        max_tokens: 400,
       }),
     });
     const result = await response.json();
