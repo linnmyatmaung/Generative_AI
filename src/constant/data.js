@@ -18,7 +18,7 @@ export const mySelf = {
       "https://drive.google.com/file/d/1dWO4RI7WwAkiexZfEskZagaPvI91cddP/view?usp=drive_link",
     facebook: "Linn Myat Maung",
   },
-  relationshipStatus: "Single",
+  relationshipStatus: "1year 5 months with my girlfriend, Tss",
   favourites: {
     color: ["White", "Black"],
     sport: ["Football"],
